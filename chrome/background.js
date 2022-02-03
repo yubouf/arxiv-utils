@@ -53,7 +53,9 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
   } else {
     newURL = "https://arxiv.org/pdf/" + id + ".pdf";
   }
-  // Create the abstract page in new tab.
+  // Toggle PDF->abstract->HTML in the SAME tab.
+  chrome.tabs.update({ "url": newURL });
+  /*
   chrome.tabs.create({ "url": newURL }, (tab) => {
     console.log(app.name, "Opened abstract page in new tab.");
     // Move the target tab next to the active tab.
@@ -63,6 +65,7 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
       console.log(app.name, "Moved abstract tab.");
     });
   });
+  */
 }
 // Check if the URL is abstract or PDF page, returns true if the URL is either.
 app.checkURL = function (url) {
