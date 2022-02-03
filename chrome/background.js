@@ -5,10 +5,13 @@ app.name = "[arXiv-utils]";
 // These 2 below is for regex matching.
 app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
 app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
+app.html_regexp = /ar5iv.org\/html\/([\S]*)$/;
 // Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
   if (url.indexOf("pdf") !== -1) {
     return "PDF";
+  } else if (url.indexOf("html") !== -1) {
+    return "html";
   }
   return "Abstract";
 }
@@ -21,6 +24,11 @@ app.getId = function (url, type) {
     // match = url.match(/arxiv.org\/pdf\/([\S]*)\2pdf$/);
     match = url.match(app.pdf_regexp);
     // The first match is the matched string, the second one is the captured group.
+    if (match === null || match.length !== 2) {
+      return null;
+    }
+  } else if (type === "html") {
+    match = url.match(app.html_regexp);
     if (match === null || match.length !== 2) {
       return null;
     }
@@ -40,6 +48,8 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
   var newURL;
   if (type === "PDF") {
     newURL = "https://arxiv.org/abs/" + id;
+  } else if (type === "Abstract") {
+    newURL = "https://ar5iv.org/html/" + id;
   } else {
     newURL = "https://arxiv.org/pdf/" + id + ".pdf";
   }
@@ -60,7 +70,8 @@ app.checkURL = function (url) {
   if (url.endsWith("/")) url = url.slice(0, -1);
   var matchPDF = url.match(app.pdf_regexp);
   var matchAbs = url.match(app.abs_regexp);
-  if (matchPDF !== null || matchAbs !== null) {
+  var matchHtml = url.match(app.html_regexp);
+  if (matchPDF !== null || matchAbs !== null || matchHtml !== null) {
     return true;
   }
   return false;
