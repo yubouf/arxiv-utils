@@ -6,7 +6,7 @@
         "scripts": ["background.js"]
     },
     "content_scripts": [{
-        "matches": ["*://arxiv.org/*pdf*", "*://arxiv.org/abs/*",
+        "matches": ["*://arxiv.org/*pdf*", "*://arxiv.org/abs/*", "*://ar5iv.org/html/*",
             "*://export.arxiv.org/*pdf*", "*://export.arxiv.org/abs/*"],
         "js": ["content.js"],
         "run_at": "document_end"
@@ -16,14 +16,15 @@
             "19": "icon19.png",
             "38": "icon38.png"
         },
-        "default_title": "Open Abstract / PDF"
+        "default_title": "Open Abstract / PDF / HTML"
     },
     "permissions": [
         "tabs",
         "activeTab",
         "storage",
         "*://export.arxiv.org/*",
-        "*://arxiv.org/*"
+        "*://arxiv.org/*",
+        "*://ar5iv.org/*"
     ],
     "icons": {
         "16": "icon16.png",

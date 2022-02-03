@@ -13,6 +13,7 @@ app.publishedYear = undefined;
 // These 2 below is for regex matching.
 app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
 app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
+app.html_regexp = /ar5iv.org\/html\/([\S]*)$/;
 // Define maximum rename title count.
 app.title_rename_count = 0;
 app.title_rename_max = 20;
@@ -20,6 +21,8 @@ app.title_rename_max = 20;
 app.getType = function (url) {
   if (url.indexOf("pdf") !== -1) {
     return "PDF";
+  } else if (url.indexOf("html") !== -1) {
+    return "html";
   }
   return "Abstract";
 }
@@ -32,6 +35,11 @@ app.getId = function (url, type) {
     // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
     match = url.match(app.pdf_regexp);
     // The first match is the matched string, the second one is the captured group.
+    if (match === null || match.length !== 2) {
+      return null;
+    }
+  } else if (type === "html") {
+    match = url.match(app.html_regexp);
     if (match === null || match.length !== 2) {
       return null;
     }
@@ -122,7 +130,7 @@ app.insertTitle = function (id, type, title, newTitle) {
 }
 // Add a direct download link if is abstract page.
 app.addDownloadLink = function (id, type, title, newTitle) {
-  if (type === "PDF") {
+  if (type !== "Abstract") {
     return;
   }
   chrome.storage.sync.get(
